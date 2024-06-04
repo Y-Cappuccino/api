@@ -11,7 +11,7 @@ class IRunner:
 
 class IFramework:
 
-    def start(self) -> None: ...
+    def start(self, yml_path: str) -> None: ...
 
     def stop(self) -> None: ...
 
@@ -25,17 +25,15 @@ class YCappuccino(abc.ABC):
     def stop(self) -> None: ...
 
 
-class ComponentDiscovered:
+class YCappuccinoComponent(abc.ABC):
 
-    def __init__(self, name: str, klass: str, module: str, path: Optional[str] = None):
-        self.name = name
-        self.klass = klass
-        self.module = module
-        self.path = path
-        self.ipopo_source = ""
+    @abc.abstractmethod
+    async def start(self):
+        """start statement for this component"""
+        ...
 
+    @abc.abstractmethod
+    async def stop(self):
+        """stop statement for this component"""
 
-class IComponentDiscovery:
-
-    def discover(self) -> list[ComponentDiscovered]:
-        pass
+        ...
