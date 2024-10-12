@@ -1,10 +1,15 @@
-class IListComponent:
+from abc import ABC
+
+from ycappuccino.api.core import YCappuccinoComponent
+
+
+class IListComponent(YCappuccinoComponent, ABC):
     pass
 
 
-class IActivityLogger:
+class IActivityLogger(YCappuccinoComponent, ABC):
     pass
 
 
-class IConfiguration:
+class IConfiguration(YCappuccinoComponent, ABC):
     pass

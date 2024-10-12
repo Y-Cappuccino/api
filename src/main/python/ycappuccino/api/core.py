@@ -1,5 +1,7 @@
 import abc
 import typing as t
+import os
+import uuid
 
 
 class IRunner:
@@ -26,6 +28,10 @@ class YCappuccino(abc.ABC):
 
 
 class YCappuccinoComponent(abc.ABC):
+
+    @staticmethod
+    def get_hash() -> str:
+        return str(__file__ + "-" + str(uuid.uuid4()))
 
     @abc.abstractmethod
     async def start(self):
