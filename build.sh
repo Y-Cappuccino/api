@@ -2,6 +2,5 @@
 
 python -m venv .venv
 . .venv/bin/activate
-pip install pyb
-pip install pyb
+pip install pybuilder
 pyb publish
