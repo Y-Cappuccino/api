@@ -9,8 +9,14 @@ use_plugin("python.flake8")
 use_plugin("python.distutils")
 
 
-name = "ycappuccino_api"
-default_task = "publish"
+project = init(
+    name="ycappuccino_api",
+    version="0.1.0",
+    description="A short description of your project",
+    authors=["Aurélien Pisu"],
+    url="https://your.project.url",
+    license="Apache",
+)
 
 
 @init
