@@ -16,5 +16,4 @@ then
     echo "No password supplied"
     exit 0
 fi
-mv target/dist/api*/dist/api*.whl target/dist/api*/dist/ycappuccino_api*.whl
-twine upload  target/dist/api*/dist/api*.whl --repository-url https://nexus.ycappuccino.fr/ -u$1 -p$2
+twine upload  target/dist/ycappuccino_api*/dist/ycappuccino_*.whl --repository-url https://nexus.ycappuccino.fr/ -u$1 -p$2
