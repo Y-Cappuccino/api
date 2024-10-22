@@ -16,4 +16,5 @@ then
     echo "No password supplied"
     exit 0
 fi
+pytest api/src/unittest/python
 twine upload  target/dist/ycappuccino_api*/dist/ycappuccino_*.whl --repository-url https://nexus.ycappuccino.fr/ -u$1 -p$2
