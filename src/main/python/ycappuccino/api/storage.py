@@ -1,6 +1,8 @@
+import dataclasses
 from abc import ABC
 import typing as t
 from ycappuccino.api.core import YCappuccinoComponent
+from ycappuccino.api.services import IService, Request
 
 
 class Query:
@@ -41,7 +43,34 @@ class ITrigger(YCappuccinoComponent, ABC):
     def is_pre(self) -> bool: ...
 
 
-class IManager(YCappuccinoComponent, ABC):
+class ReadOneRequest(Request):
+    item_id: str
+    key: str
+    tenant: t.List[str]
+
+
+class ReadManyRequest(Request):
+    item_id: str
+    filter: t.Dict[str, t.Any]
+    tenant: t.List[str]
+
+
+class CreateRequest(Request):
+    item_id: str
+    data: t.Any
+
+
+class DeleteManyRequest(Request):
+    item_id: str
+    filter: t.Dict[str, t.Any]
+
+
+class DeleteOneRequest(Request):
+    item_id: str
+    key: str
+
+
+class IManager(IService, ABC):
     def get(self, type_id: str, key: str) -> t.Any: ...
 
     def set(self, type_id: str, key: str, value: t.Any) -> None: ...
