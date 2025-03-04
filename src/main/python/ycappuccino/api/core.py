@@ -1,7 +1,8 @@
 import abc
 import typing as t
-import os
 import uuid
+
+from ycappuccino.api.core_models import ComponentDiscovered
 
 
 class IRunner:
@@ -87,23 +88,7 @@ from types import ModuleType
 import typing as t
 
 
-@dataclasses.dataclass
-class ComponentDiscovered:
-
-    module: ModuleType
-    module_name: str
-    path: t.Optional[str] = None
-
-
-@dataclasses.dataclass
-class GeneratedComponent:
-    module_name: str
-    instance_name: str
-    instance_name_obj: str
-    content: str
-
-
-class IYCappuccinoComponentLoader:
+class IComponentLoader:
     def generate(self, component_discovered: ComponentDiscovered) -> ModuleType: ...
     def load(self, component_discovered: ComponentDiscovered) -> ModuleType: ...
     def loads(self) -> ModuleType: ...
@@ -111,7 +96,7 @@ class IYCappuccinoComponentLoader:
 
 class IComponentDiscovery:
 
-    def discover(self, path: str) -> None: ...
+    def discover(self, path: t.Optional[str] = None) -> None: ...
 
 
 class IInspectModule:
