@@ -1,5 +1,5 @@
 import dataclasses
-from abc import ABC
+from abc import ABC, abstractmethod
 import typing as t
 from ycappuccino.api.core import YCappuccinoComponent
 from ycappuccino.api.services import IService, Request
@@ -10,14 +10,53 @@ class Query:
     def from_parser(params: str) -> "Query": ...
 
 
+class Filter:
+
+    @staticmethod
+    def from_parser(params: str) -> "Filter": ...
+
+
 class IStorage(YCappuccinoComponent, ABC):
+    """ """
 
-    def upsert(self, type_id: str, key: str, value: t.Any) -> None: ...
-    def get(self, type_id: str, key: str) -> t.Any: ...
+    @abstractmethod
+    async def aggregate(self, a_collection, a_pipeline):
+        """aggegate data regarding filter and pipeline"""
+        ...
 
-    def delete(self, type_id: str, key: str) -> None: ...
+    @abstractmethod
+    async def get_one(
+        self, a_collection: str, a_filter: Filter, a_params: Query = None
+    ):
+        """get dict identify by a Id"""
+        ...
 
-    def exists(self, type_id: str, key: str) -> bool: ...
+    @abstractmethod
+    async def get_many(
+        self, a_collection: str, a_filter: filter, a_offset, a_limit, a_sort
+    ):
+        """return iterable of dict regarding filter"""
+        ...
+
+    @abstractmethod
+    async def up_sert(self, a_item, a_id, a_new_dict):
+        """update or insert new dict"""
+        ...
+
+    @abstractmethod
+    async def up_sert_many(self, a_collection, a_filter, a_new_dict):
+        """update or insert document with new dict regarding filter"""
+        ...
+
+    @abstractmethod
+    async def delete(self, a_collection, a_id):
+        """delete document identified by id if it exists"""
+        ...
+
+    @abstractmethod
+    async def delete_many(self, a_collection, a_filter):
+        """ """
+        ...
 
 
 class IFilter(YCappuccinoComponent, ABC):
