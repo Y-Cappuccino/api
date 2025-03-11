@@ -6,6 +6,10 @@ from ycappuccino.api.services import IService, Request
 
 
 class Query:
+    offset: int
+    limit: int
+    sort: str
+
     @staticmethod
     def from_parser(params: str) -> "Query": ...
 
@@ -33,7 +37,7 @@ class IStorage(YCappuccinoComponent, ABC):
 
     @abstractmethod
     async def get_many(
-        self, a_collection: str, a_filter: filter, a_offset, a_limit, a_sort
+        self, a_collection: str, a_filter: Filter, a_params: Query = None
     ):
         """return iterable of dict regarding filter"""
         ...
