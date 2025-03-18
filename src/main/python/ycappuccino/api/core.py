@@ -88,20 +88,39 @@ from types import ModuleType
 import typing as t
 
 
+class IComponentRunner:
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+    async def run(self):
+        """execute what will framework do to discover and load component"""
+        ...
+
+    def set_config(self, a_config: t.Dict[str, t.Any]) -> t.List[str]: ...
+
+
 class IComponentLoader:
     def generate(self, component_discovered: ComponentDiscovered) -> ModuleType: ...
     def load(self, component_discovered: ComponentDiscovered) -> ModuleType: ...
     def loads(self) -> ModuleType: ...
 
+    def validate(self, a_context: t.Any) -> None: ...
+
 
 class IComponentDiscovery:
 
-    def discover(self, path: t.Optional[str] = None) -> None: ...
+    async def discover(self, path: t.Optional[str] = None) -> None: ...
+
+    def validate(self, a_context: t.Any) -> None: ...
 
 
 class IInspectModule:
 
     def get_ycappuccino_component(self, module: ModuleType) -> list[type]: ...
+
+    def get_ycappuccino_components(self) -> list[type]: ...
 
     def is_ycappuccino_component(
         self, a_klass: type, include_pelix: bool = False
