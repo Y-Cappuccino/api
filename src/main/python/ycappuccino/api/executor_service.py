@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import threading
 from abc import abstractmethod
 from threading import Semaphore, current_thread
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -69,6 +71,28 @@ class RunnableProcess(Callable):
         """method call when a exception in the main loop occured"""
         self._log.error("ERROR RunnableProcess {}  ".format(self._name))
         self._log.exception(a_exception)
+
+
+AsyncFunctionWithArgs = t.Callable[..., t.Awaitable[None]]
+
+
+def run_in_new_event_loop(async_func: AsyncFunctionWithArgs, *args) -> None:
+    """Runs an async function with parameters in a new event loop from a separate thread."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(async_func(*args))
+    except Exception as e:
+        print(f"Error in async function: {e}")
+    finally:
+        loop.close()  # Ensure the loop is always closed
+
+
+def execute_async_in_thread(async_func: AsyncFunctionWithArgs, *args) -> None:
+    """Creates a thread to run an async function with a new event loop and parameters."""
+    thread = threading.Thread(target=run_in_new_event_loop, args=(async_func, *args))
+    thread.start()
+    print("Thread finished")
 
 
 def _run(a_runnable) -> None:
