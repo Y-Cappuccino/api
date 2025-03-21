@@ -5,6 +5,7 @@ from ycappuccino.api.core import YCappuccinoComponent
 from ycappuccino.api.services import IService, Request
 
 
+@dataclasses.dataclass
 class Query:
     offset: int
     limit: int
@@ -14,59 +15,82 @@ class Query:
     def from_parser(params: str) -> "Query": ...
 
 
-class Filter:
+@dataclasses.dataclass
+class FilterTenant:
+
+    tenant: t.List[str] = None
 
     @staticmethod
-    def from_parser(params: str) -> "Filter": ...
+    def from_parser(params: str) -> "FilterTenant": ...
 
 
 class IStorage(YCappuccinoComponent, ABC):
     """ """
 
     @abstractmethod
-    async def aggregate(self, a_collection, a_pipeline):
+    async def aggregate(
+        self,
+        a_collection: str,
+        a_filter: FilterTenant,
+        a_pipeline: t.List[t.Dict[str, t.Any]],
+    ):
         """aggegate data regarding filter and pipeline"""
         ...
 
     @abstractmethod
     async def get_one(
-        self, a_collection: str, a_filter: Filter, a_params: Query = None
+        self,
+        a_collection: str,
+        a_id: str,
+        a_filter: FilterTenant,
+        a_params: Query,
     ):
         """get dict identify by a Id"""
         ...
 
     @abstractmethod
     async def get_many(
-        self, a_collection: str, a_filter: Filter, a_params: Query = None
+        self, a_collection: str, a_filter: FilterTenant, a_params: Query
     ):
         """return iterable of dict regarding filter"""
         ...
 
     @abstractmethod
-    async def up_sert(self, a_item, a_id, a_new_dict):
+    async def up_sert(
+        self,
+        a_collection: str,
+        a_id: str,
+        a_filter: FilterTenant,
+        params: Query,
+        a_new_dict: t.Dict[str, t.Any],
+    ):
         """update or insert new dict"""
         ...
 
     @abstractmethod
-    async def up_sert_many(self, a_collection, a_filter, a_new_dict):
+    async def up_sert_many(
+        self,
+        a_collection: str,
+        a_filter: FilterTenant,
+        params: Query,
+        a_new_dict: t.Dict[str, t.Any],
+    ):
         """update or insert document with new dict regarding filter"""
         ...
 
     @abstractmethod
-    async def delete(self, a_collection, a_id):
+    async def delete(
+        self, a_collection: str, a_id: str, a_filter: FilterTenant, query: Query
+    ):
         """delete document identified by id if it exists"""
         ...
 
     @abstractmethod
-    async def delete_many(self, a_collection, a_filter):
+    async def delete_many(
+        self, a_collection: str, a_filter: FilterTenant, query: Query
+    ):
         """ """
         ...
-
-
-class IFilter(YCappuccinoComponent, ABC):
-    """ """
-
-    def get_filter(self, a_tenant: t.Optional[str] = None) -> t.Dict[str, t.Any]: ...
 
 
 class ITrigger(YCappuccinoComponent, ABC):
